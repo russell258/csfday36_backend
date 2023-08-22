@@ -13,7 +13,7 @@ public class OrdersRepository {
     @Autowired
     private JdbcTemplate template;
 
-    private void createOrder(String orderId, Order order){
+    public void createOrder(String orderId, Order order){
         // throws unchecked exception - DataAccessException
 
         template.update(Utils.SQL_INSERT_ORDER, orderId, order.name(), order.email(), order.express());
