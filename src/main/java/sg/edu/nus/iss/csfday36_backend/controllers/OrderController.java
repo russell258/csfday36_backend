@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.json.Json;
 import sg.edu.nus.iss.csfday36_backend.Utils;
 import sg.edu.nus.iss.csfday36_backend.models.Order;
+import sg.edu.nus.iss.csfday36_backend.services.OrderException;
 import sg.edu.nus.iss.csfday36_backend.services.OrderService;
 
 @Controller
@@ -26,6 +28,19 @@ public class OrderController {
 
         Order order = Utils.toOrder(Utils.toJsonObject(payload));
         System.out.printf(">>>> order: %s\n", order);
+
+        try{
+            String orderId = orderSvc.insertNewOrder(order);
+            System.out.printf(">> orderId: %s\n", orderId);
+
+            return ResponseEntity.ok(Json.createObjectBuilder()
+                                        .add("orderId",orderId)
+                                        .build().toString());
+        
+
+        }catch (OrderException ex){
+            return ResponseEntity.status(400).body(Json.createObjectBuilder().add("message",ex.getMessage()).build().toString());
+        }
 
     }
 
